@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">MCQ Quiz</string>
+    <string name="loading_preparing_quiz">Preparing quiz</string>
+    <string name="common_retry">Retry</string>
+
+    <string name="quiz_loading_session">Loading quiz session.</string>
+    <string name="quiz_session_unavailable">Quiz session is unavailable.</string>
+    <string name="quiz_load_failed_title">Something went wrong</string>
+    <string name="quiz_load_failed_support">We cannot load your quiz.</string>
+    <string name="quiz_support_select_answer">Select one answer. Correct answers advance automatically after 2 seconds.</string>
+    <string name="quiz_support_correct_locked">Correct answer locked in. Moving to the next question.</string>
+    <string name="quiz_support_answer_revealed">Answer revealed. Moving to the next question.</string>
+    <string name="quiz_header_question_prefix">Question </string>
+    <string name="quiz_header_progress_suffix">/%1$d</string>
+    <string name="quiz_header_streak_active">Streak %1$d active</string>
+    <string name="quiz_header_streak">Streak %1$d</string>
+    <string name="quiz_skip">Skip</string>
+    <string name="quiz_answer_state_correct">Correct answer</string>
+    <string name="quiz_answer_state_selected_incorrect">Selected incorrect answer</string>
+    <string name="quiz_answer_state_selected">Selected answer</string>
+    <string name="quiz_answer_state_default">Answer option</string>
+    <string name="quiz_answer_correct">Correct</string>
+    <string name="quiz_answer_incorrect">Incorrect</string>
+
+    <string name="results_status_complete">Quiz complete</string>
+    <string name="results_headline_great_work">Great work</string>
+    <string name="results_headline_unavailable">Results unavailable</string>
+    <string name="results_support_default">Finish a quiz to see your summary.</string>
+    <string name="results_support_score">You answered %1$d of %2$d correctly.</string>
+    <string name="results_section_performance_snapshot">PERFORMANCE SNAPSHOT</string>
+    <string name="results_chip_best_streak">Best streak</string>
+    <string name="results_chip_milestones">Milestones</string>
+    <string name="results_accuracy_description">Accuracy %1$d percent, %2$d correct out of %3$d</string>
+    <string name="results_accuracy_percent">%1$d%%</string>
+    <string name="results_accuracy_correct_count">%1$d/%2$d correct</string>
+    <string name="results_momentum_elite">Elite rhythm</string>
+    <string name="results_momentum_strong">Strong rhythm</string>
+    <string name="results_momentum_steady">Steady rhythm</string>
+    <string name="results_momentum_practice">Practice momentum</string>
+    <string name="results_momentum_no_skips">No skips this round</string>
+    <string name="results_momentum_one_skip">Only 1 skip</string>
+    <plurals name="results_momentum_skips">
+        <item quantity="one">%1$d skip</item>
+        <item quantity="other">%1$d skips</item>
+    </plurals>
+    <string name="results_insight_accuracy_title">Accuracy pulse</string>
+    <string name="results_insight_accuracy_locked_in">Locked in</string>
+    <string name="results_insight_accuracy_sharp_finish">Sharp finish</string>
+    <string name="results_insight_accuracy_solid_base">Solid base</string>
+    <string name="results_insight_accuracy_room_to_grow">Room to grow</string>
+    <string name="results_insight_accuracy_support">%1$d correct, %2$d off target</string>
+    <string name="results_insight_streak_title">Streak energy</string>
+    <string name="results_insight_streak_heat_check">Heat check: %1$d</string>
+    <string name="results_insight_streak_at">Streak at %1$d</string>
+    <string name="results_insight_streak_none">No milestone chain this round</string>
+    <plurals name="results_insight_milestones_unlocked">
+        <item quantity="one">%1$d momentum milestone unlocked</item>
+        <item quantity="other">%1$d momentum milestones unlocked</item>
+    </plurals>
+    <string name="results_insight_decision_title">Decision style</string>
+    <string name="results_insight_decision_committed">Committed</string>
+    <string name="results_insight_decision_measured">Measured</string>
+    <string name="results_insight_decision_attempted_all">You attempted every question</string>
+    <plurals name="results_insight_decision_skipped_support">
+        <item quantity="one">%1$d question skipped to protect pace</item>
+        <item quantity="other">%1$d questions skipped to protect pace</item>
+    </plurals>
+    <string name="results_journey_heading">YOUR QUIZ JOURNEY</string>
+    <string name="results_journey_support">Every question is mapped so you can see where the round swung.</string>
+    <string name="results_label_correct">Correct</string>
+    <string name="results_label_wrong">Wrong</string>
+    <string name="results_label_skipped">Skipped</string>
+    <string name="results_timeline_description">Question %1$d, %2$s</string>
+    <string name="results_try_again">Try again</string>
+    <string name="results_try_again_support">Run another round to chase a cleaner streak and sharper finish.</string>
+</resources>
