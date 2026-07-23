@@ -1,6 +1,5 @@
 package com.example.quizassignment.feature.quiz.presentation
 
 data class LoadingUiState(
-    val isLoading: Boolean = true,
-    val shouldNavigateToQuiz: Boolean = false
+    val isLoading: Boolean = true
 )

@@ -1,13 +1,14 @@
 package com.example.quizassignment.feature.quiz.presentation
 
 import com.example.quizassignment.R
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizassignment.core.common.AppResult
 import com.example.quizassignment.core.common.UiText
 import com.example.quizassignment.domain.model.QuestionRecord
 import com.example.quizassignment.domain.usecase.BuildQuizResultUseCase
-import com.example.quizassignment.domain.usecase.RestartQuizUseCase
+import com.example.quizassignment.domain.usecase.GetQuizProgressUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,16 +18,19 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ResultsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val buildQuizResultUseCase: BuildQuizResultUseCase,
-    private val restartQuizUseCase: RestartQuizUseCase,
+    private val getQuizProgressUseCase: GetQuizProgressUseCase,
     private val quizSessionStore: QuizSessionStore
 ) : ViewModel() {
 
+    private val subjectId: String? = savedStateHandle["subjectId"]
     private val _uiState = MutableStateFlow(ResultsUiState())
     val uiState: StateFlow<ResultsUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
+            restoreSessionIfNeeded()
             quizSessionStore.session.collect { session ->
                 if (session == null) {
                     _uiState.value = ResultsUiState()
@@ -64,12 +68,14 @@ class ResultsViewModel @Inject constructor(
         }
     }
 
-    fun restartQuiz(): Boolean {
-        return when (val result = restartQuizUseCase(quizSessionStore.currentSession())) {
-            is AppResult.Error -> false
-            is AppResult.Success -> {
-                quizSessionStore.update(result.data)
-                true
+    private suspend fun restoreSessionIfNeeded() {
+        val requestedSubjectId = subjectId ?: return
+        if (quizSessionStore.currentSubject()?.id == requestedSubjectId) return
+
+        when (val result = getQuizProgressUseCase(requestedSubjectId)) {
+            is AppResult.Error -> Unit
+            is AppResult.Success -> result.data?.let { progress ->
+                quizSessionStore.open(progress.subject, progress.session)
             }
         }
     }

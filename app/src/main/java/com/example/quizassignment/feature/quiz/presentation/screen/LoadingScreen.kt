@@ -13,10 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -26,8 +23,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -38,42 +33,13 @@ import com.example.quizassignment.core.designsystem.components.AppEdgeToEdgeScaf
 import com.example.quizassignment.core.designsystem.components.PreviewFrame
 import com.example.quizassignment.core.designsystem.theme.QuizPrimarySoft
 import com.example.quizassignment.feature.quiz.presentation.LoadingUiState
-import com.example.quizassignment.feature.quiz.presentation.LoadingViewModel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoadingRoute(
-    onContinue: () -> Unit,
-    viewModel: LoadingViewModel = hiltViewModel()
-) {
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
-    var hasNavigated by rememberSaveable { mutableStateOf(false) }
-    var isIntroAnimationFinished by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(IntroMinimumDurationMillis)
-        isIntroAnimationFinished = true
-    }
-
-    LaunchedEffect(state.shouldNavigateToQuiz, isIntroAnimationFinished) {
-        if (state.shouldNavigateToQuiz && isIntroAnimationFinished && !hasNavigated) {
-            hasNavigated = true
-            onContinue()
-        }
-    }
-
-    LoadingScreen(
-        state = state,
-        onRetry = viewModel::retry
-    )
-}
-
-@Composable
 fun LoadingScreen(
     state: LoadingUiState,
-    onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val preparingQuizLabel = stringResource(R.string.loading_preparing_quiz)
@@ -145,7 +111,7 @@ private fun LoadingContent(
         )
 
         Image(
-            painter = painterResource(id = R.drawable.ic_quiz_spark_app_icon),
+            painter = painterResource(id = R.drawable.ic_android_app_icon),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.Center)
@@ -159,6 +125,5 @@ private fun LoadingContent(
     }
 }
 
-private const val IntroMinimumDurationMillis = 1_000L
 private const val LogoRevealDelayMillis = 434L
 private const val LogoRevealDurationMillis = 440

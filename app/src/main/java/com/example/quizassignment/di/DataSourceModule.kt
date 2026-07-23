@@ -1,5 +1,7 @@
 package com.example.quizassignment.di
 
+import com.example.quizassignment.data.datasource.local.DataStoreQuizProgressLocalDataSource
+import com.example.quizassignment.data.datasource.local.QuizProgressLocalDataSource
 import com.example.quizassignment.data.datasource.remote.QuizRemoteDataSource
 import com.example.quizassignment.data.datasource.remote.RetrofitQuizRemoteDataSource
 import dagger.Binds
@@ -11,6 +13,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindQuizProgressLocalDataSource(
+        implementation: DataStoreQuizProgressLocalDataSource
+    ): QuizProgressLocalDataSource
 
     @Binds
     @Singleton

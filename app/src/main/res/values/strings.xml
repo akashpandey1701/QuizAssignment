@@ -3,6 +3,15 @@
     <string name="loading_preparing_quiz">Preparing quiz</string>
     <string name="common_retry">Retry</string>
 
+    <string name="subjects_eyebrow">QUIZ SUBJECTS</string>
+    <string name="subjects_title">Choose a subject</string>
+    <string name="subjects_support">Start a new quiz or continue where you left off.</string>
+    <string name="subjects_empty">No quiz subjects are available.</string>
+    <string name="subjects_error_title">Couldn’t load subjects</string>
+    <string name="subject_status_start">Start quiz</string>
+    <string name="subject_status_resume">Resume quiz</string>
+    <string name="subject_status_completed">View results</string>
+
     <string name="quiz_loading_session">Loading quiz session.</string>
     <string name="quiz_session_unavailable">Quiz session is unavailable.</string>
     <string name="quiz_load_failed_title">Something went wrong</string>
@@ -71,6 +80,6 @@
     <string name="results_label_wrong">Wrong</string>
     <string name="results_label_skipped">Skipped</string>
     <string name="results_timeline_description">Question %1$d, %2$s</string>
-    <string name="results_try_again">Try again</string>
-    <string name="results_try_again_support">Run another round to chase a cleaner streak and sharper finish.</string>
+    <string name="results_back_to_subjects">Back to subjects</string>
+    <string name="results_back_to_subjects_support">Choose another subject when you are ready.</string>
 </resources>

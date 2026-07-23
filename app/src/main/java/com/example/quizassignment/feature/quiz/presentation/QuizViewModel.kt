@@ -1,12 +1,15 @@
 package com.example.quizassignment.feature.quiz.presentation
 
 import com.example.quizassignment.R
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.quizassignment.core.common.AppResult
 import com.example.quizassignment.core.common.UiText
 import com.example.quizassignment.feature.quiz.mapper.QuizUiMapper
 import com.example.quizassignment.domain.usecase.AdvanceToNextQuestionUseCase
+import com.example.quizassignment.domain.usecase.GetQuizProgressUseCase
+import com.example.quizassignment.domain.usecase.SaveQuizProgressUseCase
 import com.example.quizassignment.domain.usecase.SelectAnswerUseCase
 import com.example.quizassignment.domain.usecase.SkipQuestionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,19 +24,24 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val selectAnswerUseCase: SelectAnswerUseCase,
     private val skipQuestionUseCase: SkipQuestionUseCase,
     private val advanceToNextQuestionUseCase: AdvanceToNextQuestionUseCase,
+    private val getQuizProgressUseCase: GetQuizProgressUseCase,
+    private val saveQuizProgressUseCase: SaveQuizProgressUseCase,
     private val quizUiMapper: QuizUiMapper,
     private val quizSessionStore: QuizSessionStore
 ) : ViewModel() {
 
+    private val subjectId: String? = savedStateHandle["subjectId"]
     private val _uiState = MutableStateFlow(QuizUiState())
     val uiState: StateFlow<QuizUiState> = _uiState.asStateFlow()
     private var autoAdvanceJob: Job? = null
 
     init {
         viewModelScope.launch {
+            restoreSessionIfNeeded()
             combine(
                 quizSessionStore.session,
                 quizSessionStore.loadError
@@ -49,7 +57,29 @@ class QuizViewModel @Inject constructor(
                             supportingText = UiText.Resource(R.string.quiz_session_unavailable)
                         )
                     }
+                    if (session != null && !session.isCompleted && session.currentRecord != null) {
+                        scheduleAutoAdvance()
+                    } else if (session?.isCompleted == true) {
+                        autoAdvanceJob?.cancel()
+                    }
                 }
+        }
+    }
+
+    private suspend fun restoreSessionIfNeeded() {
+        val requestedSubjectId = subjectId ?: return
+        if (quizSessionStore.currentSubject()?.id == requestedSubjectId) return
+
+        when (val result = getQuizProgressUseCase(requestedSubjectId)) {
+            is AppResult.Error -> quizSessionStore.setLoadError(result.message)
+            is AppResult.Success -> {
+                val progress = result.data
+                if (progress == null) {
+                    quizSessionStore.setLoadError("Saved quiz progress is unavailable.")
+                } else {
+                    quizSessionStore.open(progress.subject, progress.session)
+                }
+            }
         }
     }
 
@@ -73,7 +103,7 @@ class QuizViewModel @Inject constructor(
             is AppResult.Error -> showError(result.message)
             is AppResult.Success -> {
                 quizSessionStore.update(result.data)
-                scheduleAutoAdvance()
+                persistProgress()
             }
         }
     }
@@ -100,7 +130,27 @@ class QuizViewModel @Inject constructor(
     private fun advanceSession(session: com.example.quizassignment.domain.model.QuizSession) {
         when (val result = advanceToNextQuestionUseCase(session)) {
             is AppResult.Error -> showError(result.message)
-            is AppResult.Success -> quizSessionStore.update(result.data)
+            is AppResult.Success -> {
+                viewModelScope.launch {
+                    val progress = quizSessionStore.currentProgress()
+                        ?.copy(session = result.data)
+                        ?: return@launch
+                    when (val saveResult = saveQuizProgressUseCase(progress)) {
+                        is AppResult.Error -> showError(saveResult.message)
+                        is AppResult.Success -> quizSessionStore.update(result.data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun persistProgress() {
+        val progress = quizSessionStore.currentProgress() ?: return
+        viewModelScope.launch {
+            val result = saveQuizProgressUseCase(progress)
+            if (result is AppResult.Error) {
+                showError(result.message)
+            }
         }
     }
 

@@ -18,6 +18,7 @@ class MainActivityFlowTest {
 
     @Test
     fun skippingTheFirstQuestionAdvancesImmediately() {
+        openAndroidBasicsQuiz()
         waitForQuestion(1)
 
         composeRule.onNodeWithText("Skip").performClick()
@@ -27,6 +28,7 @@ class MainActivityFlowTest {
 
     @Test
     fun answeringTheFirstQuestionAutoAdvancesWithoutPressingNext() {
+        openAndroidBasicsQuiz()
         waitForQuestion(1)
 
         composeRule.onNodeWithText("Flappy Bird-style game").performClick()
@@ -35,7 +37,8 @@ class MainActivityFlowTest {
     }
 
     @Test
-    fun completingTheQuizShowsResultsAndRestartReturnsToStart() {
+    fun completingTheQuizShowsResultsAndCannotRestartCompletedSubject() {
+        openAndroidBasicsQuiz()
         waitForQuestion(1)
 
         answerAndAdvance("Flappy Bird-style game")
@@ -70,9 +73,17 @@ class MainActivityFlowTest {
         waitForText("Perfect score")
         composeRule.onNodeWithText("10/10").assertIsDisplayed()
 
-        composeRule.onNodeWithText("Restart quiz").performClick()
+        composeRule.onNodeWithText("Back to subjects").performClick()
 
-        waitForQuestion(1)
+        waitForText("Choose a subject")
+        composeRule.onNodeWithText("Android Basics").performClick()
+        waitForText("Perfect score")
+        composeRule.onNodeWithText("10/10").assertIsDisplayed()
+    }
+
+    private fun openAndroidBasicsQuiz() {
+        waitForText("Choose a subject")
+        composeRule.onNodeWithText("Android Basics").performClick()
     }
 
     private fun answerAndAdvance(answerText: String) {

@@ -29,7 +29,6 @@ class QuizUseCasesTest {
     private val skipQuestionUseCase = SkipQuestionUseCase()
     private val advanceToNextQuestionUseCase = AdvanceToNextQuestionUseCase()
     private val buildQuizResultUseCase = BuildQuizResultUseCase()
-    private val restartQuizUseCase = RestartQuizUseCase(startQuizSessionUseCase)
 
     @Test
     fun `start session validates questions and returns first question`() {
@@ -108,20 +107,6 @@ class QuizUseCasesTest {
             "Quiz results are unavailable before completion.",
             (result as AppResult.Error).message
         )
-    }
-
-    @Test
-    fun `restart creates a fresh session with cleared progress`() {
-        val firstAnswered = (selectAnswerUseCase(startSession(), 1) as AppResult.Success).data
-
-        val restarted = restartQuizUseCase(firstAnswered)
-
-        assertTrue(restarted is AppResult.Success)
-        val restartedSession = (restarted as AppResult.Success).data
-        assertEquals(0, restartedSession.currentQuestionIndex)
-        assertTrue(restartedSession.records.isEmpty())
-        assertEquals(0, restartedSession.currentStreak)
-        assertEquals(0, restartedSession.longestStreak)
     }
 
     private fun startSession() = (startQuizSessionUseCase(questions) as AppResult.Success).data

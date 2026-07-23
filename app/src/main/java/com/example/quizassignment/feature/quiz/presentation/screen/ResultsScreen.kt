@@ -1,7 +1,6 @@
 package com.example.quizassignment.feature.quiz.presentation.screen
 
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalActivity
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -30,10 +29,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.GpsFixed
 import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.TaskAlt
 import androidx.compose.material.icons.filled.Timeline
@@ -107,29 +106,24 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ResultsRoute(
-    onRestart: () -> Unit,
+    onBackToSubjects: () -> Unit,
     viewModel: ResultsViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
     ResultsScreen(
         state = state,
-        onRestart = {
-            if (viewModel.restartQuiz()) {
-                onRestart()
-            }
-        }
+        onBackToSubjects = onBackToSubjects
     )
 }
 
 @Composable
 fun ResultsScreen(
     state: ResultsUiState,
-    onRestart: () -> Unit,
+    onBackToSubjects: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalActivity.current
     BackHandler(enabled = true) {
-        activity?.finish()
+        onBackToSubjects()
     }
 
     AppEdgeToEdgeScaffold(modifier = modifier) { innerPadding ->
@@ -165,7 +159,7 @@ fun ResultsScreen(
                     questionResults = state.questionResults,
                     modifier = Modifier.fillMaxWidth()
                 )
-                RestartSection(onRestart = onRestart)
+                BackToSubjectsSection(onBackToSubjects = onBackToSubjects)
             }
         }
     }
@@ -813,8 +807,8 @@ private fun TimelineNode(
 }
 
 @Composable
-private fun RestartSection(
-    onRestart: () -> Unit,
+private fun BackToSubjectsSection(
+    onBackToSubjects: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -823,7 +817,7 @@ private fun RestartSection(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = onRestart,
+            onClick = onBackToSubjects,
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 56.dp)
@@ -839,17 +833,17 @@ private fun RestartSection(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Refresh,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = null
                 )
                 Text(
-                    text = stringResource(R.string.results_try_again),
+                    text = stringResource(R.string.results_back_to_subjects),
                     style = ResultsButtonTextStyle
                 )
             }
         }
         Text(
-            text = stringResource(R.string.results_try_again_support),
+            text = stringResource(R.string.results_back_to_subjects_support),
             style = ResultsStatLabelTextStyle,
             color = QuizSecondaryText,
             textAlign = TextAlign.Center
@@ -1048,7 +1042,7 @@ private fun ResultsScreenPreview() {
                     QuestionResultUiModel(10, QuestionResultStatus.Correct, false)
                 )
             ),
-            onRestart = {}
+            onBackToSubjects = {}
         )
     }
 }

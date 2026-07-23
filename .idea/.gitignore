@@ -1,0 +1,76 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Gradle
+.gradle/
+build/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+
+# Generated files
+generated/
+bin/
+gen/
+
+# APK / App Bundle
+*.apk
+*.aab
+*.ap_
+*.aar
+
+# Native build files
+obj/
+*.so
+
+# Signing files
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+
+# Logs
+*.log
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Firebase crash symbols and generated config
+firebaseCrashlytics/
+appDistribution/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Secrets and environment files
+.env
+.env.*
+secrets.properties
+apikey.properties
+
+# Optional: ignore Firebase configuration when it is environment-specific
+# google-services.json
+# GoogleService-Info.plist
+
+# Optional: ignore generated baseline profiles
+# **/generated/baselineProfiles/

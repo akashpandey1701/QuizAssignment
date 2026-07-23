@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalFireDepartment
@@ -129,33 +130,40 @@ private fun QuestionProgressLabel(
 ) {
     val questionPrefix = stringResource(R.string.quiz_header_question_prefix)
     val questionSuffix = stringResource(R.string.quiz_header_progress_suffix, totalQuestions)
-    Text(
-        text = buildAnnotatedString {
-            withStyle(SpanStyle(color = QuizPrimaryText)) {
-                append(questionPrefix)
-            }
-            withStyle(
-                SpanStyle(
-                    color = QuizPrimary,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-            ) {
-                append(questionNumber.toString())
-            }
-            withStyle(
-                SpanStyle(
-                    color = QuizPrimaryText,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 15.sp
-                )
-            ) {
-                append(questionSuffix)
-            }
-        },
-        style = QuizHeaderProgressTextStyle,
-        modifier = modifier
-    )
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = questionPrefix.trimEnd(),
+            style = QuizHeaderProgressTextStyle,
+            color = QuizPrimaryText
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = buildAnnotatedString {
+                withStyle(
+                    SpanStyle(
+                        color = QuizPrimary,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                ) {
+                    append(questionNumber.toString())
+                }
+                withStyle(
+                    SpanStyle(
+                        color = QuizPrimaryText,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp
+                    )
+                ) {
+                    append(questionSuffix)
+                }
+            },
+            style = QuizHeaderProgressTextStyle
+        )
+    }
 }
 
 @Composable
