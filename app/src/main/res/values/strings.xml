@@ -6,6 +6,7 @@
     <string name="subjects_eyebrow">QUIZ SUBJECTS</string>
     <string name="subjects_title">Choose a subject</string>
     <string name="subjects_support">Start a new quiz or continue where you left off.</string>
+    <string name="subjects_payment_action">Make a payment</string>
     <string name="subjects_empty">No quiz subjects are available.</string>
     <string name="subjects_error_title">Couldn’t load subjects</string>
     <string name="subject_status_start">Start quiz</string>

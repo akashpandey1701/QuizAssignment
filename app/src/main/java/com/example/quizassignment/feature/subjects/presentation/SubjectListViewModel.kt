@@ -176,4 +176,5 @@ class SubjectListViewModel @Inject constructor(
             quizState = quizState
         )
     }
+
 }

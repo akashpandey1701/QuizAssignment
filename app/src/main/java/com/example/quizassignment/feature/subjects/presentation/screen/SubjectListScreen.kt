@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Replay
@@ -32,6 +33,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -74,6 +76,7 @@ import com.example.quizassignment.feature.subjects.presentation.SubjectQuizState
 
 @Composable
 fun SubjectListRoute(
+    onPaymentClick: () -> Unit,
     onOpenQuiz: (String) -> Unit,
     onOpenResults: (String) -> Unit,
     viewModel: SubjectListViewModel = hiltViewModel()
@@ -92,7 +95,8 @@ fun SubjectListRoute(
     SubjectListScreen(
         state = state,
         onSubjectClick = viewModel::selectSubject,
-        onRetry = viewModel::retry
+        onRetry = viewModel::retry,
+        onPaymentClick = onPaymentClick
     )
 }
 
@@ -101,6 +105,7 @@ fun SubjectListScreen(
     state: SubjectListUiState,
     onSubjectClick: (String) -> Unit,
     onRetry: () -> Unit,
+    onPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (state.isLoading) {
@@ -129,6 +134,7 @@ fun SubjectListScreen(
         SubjectListContent(
             state = state,
             onSubjectClick = onSubjectClick,
+            onPaymentClick = onPaymentClick,
             contentPadding = innerPadding,
             modifier = Modifier.fillMaxSize()
         )
@@ -139,6 +145,7 @@ fun SubjectListScreen(
 private fun SubjectListContent(
     state: SubjectListUiState,
     onSubjectClick: (String) -> Unit,
+    onPaymentClick: () -> Unit,
     contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
@@ -159,7 +166,7 @@ private fun SubjectListContent(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             item {
-                SubjectHeader()
+                SubjectHeader(onPaymentClick = onPaymentClick)
             }
 
             state.errorMessage?.let { message ->
@@ -185,6 +192,7 @@ private fun SubjectListContent(
 
 @Composable
 private fun SubjectHeader(
+    onPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -193,19 +201,42 @@ private fun SubjectHeader(
             .padding(bottom = 12.dp),
         verticalArrangement = Arrangement.spacedBy(9.dp)
     ) {
-        Text(
-            text = stringResource(R.string.subjects_eyebrow),
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Bold,
-            color = QuizPrimary
-        )
-        Text(
-            text = stringResource(R.string.subjects_title),
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = QuizPrimaryText,
-            modifier = Modifier.semantics { heading() }
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.subjects_eyebrow),
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = QuizPrimary
+                )
+                Text(
+                    text = stringResource(R.string.subjects_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = QuizPrimaryText,
+                    modifier = Modifier.semantics { heading() }
+                )
+            }
+            IconButton(
+                onClick = onPaymentClick,
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(QuizOptionSurface, CircleShape)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.CreditCard,
+                    contentDescription = stringResource(R.string.subjects_payment_action),
+                    tint = QuizPrimary
+                )
+            }
+        }
         Text(
             text = stringResource(R.string.subjects_support),
             style = MaterialTheme.typography.bodyLarge,

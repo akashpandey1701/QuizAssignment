@@ -14,6 +14,7 @@ import com.example.quizassignment.feature.subjects.presentation.screen.SubjectLi
 @Composable
 fun QuizNavHost(
     navController: NavHostController,
+    onPaymentClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -23,6 +24,7 @@ fun QuizNavHost(
     ) {
         composable(QuizRoutes.Subjects) {
             SubjectListRoute(
+                onPaymentClick = onPaymentClick,
                 onOpenQuiz = { subjectId ->
                     navController.navigate(QuizRoutes.quiz(subjectId)) {
                         launchSingleTop = true

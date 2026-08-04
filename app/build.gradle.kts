@@ -1,4 +1,18 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use(::load)
+    }
+}
+
+val razorpayKeyId = (providers.gradleProperty("RAZORPAY_KEY_ID").orNull
+    ?: localProperties.getProperty("RAZORPAY_KEY_ID")
+    ?: error("RAZORPAY_KEY_ID is missing. Add it to local.properties."))
+    .trim()
+    .removeSurrounding("\"")
 
 plugins {
     alias(libs.plugins.android.application)
@@ -18,6 +32,12 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField(
+            type = "String",
+            name = "RAZORPAY_KEY_ID",
+            value = "\"$razorpayKeyId\""
+        )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -96,4 +116,5 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    implementation("com.razorpay:checkout:1.6.41")
 }
